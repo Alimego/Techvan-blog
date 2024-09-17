@@ -1,4 +1,4 @@
-import sectionOnedata from '../../data/SectionOneData'
+import sectionOnedata from '../../data/sectionOneData'
 
 const SectionOne = () => {
   return (
