@@ -16,12 +16,12 @@ const Footer = () => {
             <p className='block text-2xl md:text-3xl font-bold text-primary'>ALIMEGO</p>
           </div>
         </Link>
-        <div className='text-center font-medium md:w-[600px]'>Alimego Empowers you with Knowledge. Get the latest insights and updates on the ever-evolving world of technology.</div>
+        <div className='text-center font-medium md:w-[600px] font-[Lato]'>Alimego Empowers you with Knowledge. Get the latest insights and updates on the ever-evolving world of technology.</div>
       </div>
-      <ul className='flex gap-10 md:gap-20 justify-center items-center py-4 md:py-6 text-[18px]'>
-        <li className='cursor-pointer'>About Us</li>
-        <li className='cursor-pointer'>Contact Us</li>
-        <li className='cursor-pointer'>Events</li>
+      <ul className='flex gap-10 md:gap-20 justify-center items-center py-4 md:py-6 text-[18px] font-[Lato]'>
+        <Link to={'/about'}>About</Link>
+        <Link to={'/contact'}>Contact</Link>
+        <Link to={'/jobs'}>Jobs</Link>
       </ul>
       <div className='pt-4'>
         <p className='text-center text-[18px] font-semibold'>Follow us:</p>

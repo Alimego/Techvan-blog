@@ -9,19 +9,19 @@ function NavbarIcon() {
     >
       <path
         d="M2 7H21"
-        stroke="#EE4B2B"
+        stroke="#1B4285"
         strokeWidth="2"
         strokeLinecap="round"
       />
       <path
         d="M2 12H21"
-        stroke="#EE4B2B"
+        stroke="#1B4285"
         strokeWidth="2"
         strokeLinecap="round"
       />
       <path
         d="M2 17H21"
-        stroke="#EE4B2B"
+        stroke="#1B4285"
         strokeWidth="2"
         strokeLinecap="round"
       />

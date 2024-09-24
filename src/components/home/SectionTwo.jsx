@@ -28,12 +28,12 @@ const SectionTwo = () => {
             <div className="flex justify-between gap-3 w-full py-4 md:h-[200px]">
               <div className="w-[60%] flex flex-col gap-1">
                   <div onClick={()=> handleCategoryClick(data?.category)}>
-                    <p className="text-[18px] text-primary font-semibold cursor-pointer">{data?.category}</p>
+                    <p className="text-[18px] text-primary font-semibold cursor-pointer font-[Lato]">{data?.category}</p>
                   </div>
                   <div onClick={()=> handlePostClick(data?.title)}>
                     <p className="text-xl text-black font-bold hover:underline cursor-pointer">{data?.title}</p>
                   </div>
-                  <div className="flex flex-col gap-1 text-[#777676]">
+                  <div className="flex flex-col gap-1 text-[#777676] font-[Lato]">
                       <p>{data?.writer}</p>
                       <p>{data?.date}</p>
                   </div>

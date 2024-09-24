@@ -23,12 +23,12 @@ const SectionOneLg = () => {
           <div key={data?.id} className="w-full h-full flex flex-col justify-between gap-3">
             <div className="w-full flex flex-col gap-3 h-[35vh]">
               <div onClick={()=> handleCategoryClick(data?.category)}>
-                <p className="text-xl text-primary font-semibold cursor-pointer">{data?.category}</p>
+                <p className="text-xl text-primary font-semibold cursor-pointer font-[Lato]">{data?.category}</p>
               </div>
               <div onClick={()=> handlePostClick(data?.title)}>
                 <p className="text-2xl text-black font-bold hover:underline cursor-pointer">{data?.title}</p>
               </div>
-              <div className="flex items-center gap-2 text-[#777676]">
+              <div className="flex items-center gap-2 text-[#777676] font-[Lato]">
                 <p>{data?.writer}</p>
                 <p>-</p>
                 <p>{data?.date}</p>
@@ -45,12 +45,12 @@ const SectionOneLg = () => {
           <div key={data?.id} className="h-[20vh] flex gap-3">
             <div className='w-[50%] h-fit'>
               <div onClick={()=> handleCategoryClick(data?.category)}>
-                <p className="text-sm text-primary font-semibold cursor-pointer">{data?.category}</p>
+                <p className="text-sm text-primary font-semibold cursor-pointer font-[Lato]">{data?.category}</p>
               </div>
               <div onClick={()=> handlePostClick(data?.title)}>
                 <p className="text-[18px] text-black font-bold hover:underline cursor-pointer">{data?.title}</p>
               </div>
-              <div className="flex items-center gap-2 text-[#777676] text-sm">
+              <div className="flex items-center gap-2 text-[#777676] text-sm font-[Lato]">
                 <p>{data?.writer}</p>
                 <p>-</p>
                 <p>{data?.date}</p>

@@ -10,7 +10,7 @@ const Navbar = () => {
       <Link to='/'>
         <div className='flex items-center gap-2 md:gap-4' onClick={scrollToTop}>
           <img src={alimego} alt='ALIMEGO' className='w-[50px] md:w-[60px] h-[50px] md:h-[60px]'/>
-          <p className='block text-2xl md:text-3xl font-bold text-primary'>ALIMEGO</p>
+          <p className='block text-2xl md:text-3xl font-bold text-primary font-[Poppins]'>ALIMEGO</p>
         </div>
       </Link>
       <div className='flex items-center gap-2 md:gap-10'>

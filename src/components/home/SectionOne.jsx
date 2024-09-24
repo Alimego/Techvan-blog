@@ -22,12 +22,12 @@ const SectionOne = () => {
         <div key={data?.id} className="flex">
           <div  className="w-full flex flex-col gap-3">
             <div onClick={()=> handleCategoryClick(data?.category)}>
-              <p className="text-xl text-primary font-semibold cursor-pointer">{data?.category}</p>
+              <p className="text-xl text-primary font-semibold cursor-pointer font-[Lato]">{data?.category}</p>
             </div>
             <div onClick={()=> handlePostClick(data?.title)}>
               <p className="text-2xl text-black font-bold hover:underline cursor-pointer">{data?.title}</p>
             </div>
-            <div className="flex items-center gap-2 text-[#777676]">
+            <div className="flex items-center gap-2 text-[#777676] font-[Lato]">
               <p>{data?.writer}</p>
               <p>-</p>
               <p>{data?.date}</p>
