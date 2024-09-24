@@ -9,7 +9,7 @@ const AboutUs = () => {
   return (
    <Layout>
     <div className="pt-20 pb-6 px-6 md:px-20">
-      <p className="font-semibold text-[28px] md:text-3xl pb-3 md:py-6">About Us</p>
+      <p className="font-semibold text-2xl md:text-3xl pb-3 md:py-6">About Us</p>
       <div>
         <p className="text-[17px] flex flex-col gap-3 font-[Lato]">
           <p>At Alimego, our mission is to provide you with fast, accurate, and reliable updates on the latest technology. We’re passionate about keeping you informed, whether it&apos;s new gadgets, software updates, or major breakthroughs in the tech world. Our goal is to build a community of tech enthusiasts who are always in the know and ready to share their knowledge with others.</p>

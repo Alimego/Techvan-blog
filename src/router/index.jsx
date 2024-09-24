@@ -6,11 +6,12 @@ import Post from '../pages/Post'
 import Search from '../pages/Search'
 import Category from '../pages/Category'
 import Jobs from '../pages/Jobs'
+import NoPage from '../pages/NoPage'
 
 const router = createBrowserRouter([
   {
     path: '*',
-    element: <div>page not found</div>, // 404 page to be completed
+    element: <NoPage />, // 404 page to be completed
   },
   {
     path: '/',

@@ -42,7 +42,7 @@ const SectionOneLg = () => {
       </div>
       <div className='w-[40%] flex flex-col gap-6 justify-between'>
         {featuredPostData.slice(1).map((data)=>(
-          <div key={data?.id} className="h-[20vh] flex gap-3">
+          <div key={data?.id} className="h-[20vh] flex gap-4">
             <div className='w-[50%] h-fit'>
               <div onClick={()=> handleCategoryClick(data?.category)}>
                 <p className="text-sm text-primary font-semibold cursor-pointer font-[Lato]">{data?.category}</p>

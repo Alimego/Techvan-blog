@@ -27,7 +27,7 @@ const SectionOne = () => {
             <div onClick={()=> handlePostClick(data?.title)}>
               <p className="text-2xl text-black font-bold hover:underline cursor-pointer">{data?.title}</p>
             </div>
-            <div className="flex items-center gap-2 text-[#777676] font-[Lato]">
+            <div className="flex items-center gap-2 text-[#777676] font-[Lato] text-sm">
               <p>{data?.writer}</p>
               <p>-</p>
               <p>{data?.date}</p>
