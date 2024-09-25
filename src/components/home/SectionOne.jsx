@@ -33,7 +33,7 @@ const SectionOne = () => {
               <p>{data?.date}</p>
             </div>
             <div onClick={()=> handlePostClick(data?.title)}>
-              <img src={data?.image} alt="Arduino" className='w-full h-[220px] md:h-[350px] rounded-md cursor-pointer'/>
+              <img src={data?.image} alt={data?.title} className='w-full h-[220px] md:h-[350px] rounded-md cursor-pointer'/>
             </div>
           </div>
         </div>

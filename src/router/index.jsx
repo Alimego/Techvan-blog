@@ -7,6 +7,8 @@ import Search from '../pages/Search'
 import Category from '../pages/Category'
 import Jobs from '../pages/Jobs'
 import NoPage from '../pages/NoPage'
+import RegisterPage from '../pages/RegisterPage'
+import LoginPage from '../pages/LoginPage'
 
 const router = createBrowserRouter([
   {
@@ -39,7 +41,15 @@ const router = createBrowserRouter([
   },
   {
     path: '/jobs',
-    element: <Jobs />, // Category page
+    element: <Jobs />, // Job page
+  },
+  {
+    path: '/alimego-reg-1b12',
+    element: <RegisterPage />, //  Register page
+  },
+  {
+    path: '/alimego-log-1b12',
+    element: < LoginPage/>, // Login page
   },
 ])
 

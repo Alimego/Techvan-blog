@@ -35,7 +35,7 @@ const SectionOneLg = () => {
               </div>
             </div>
             <div onClick={()=> handlePostClick(data?.title)}>
-              <img src={data?.image} alt="Arduino" className='w-full h-[50vh] rounded-md cursor-pointer'/>
+              <img src={data?.image} alt={data?.title} className='w-full h-[50vh] rounded-md cursor-pointer'/>
             </div>
           </div>
         ))}
@@ -58,7 +58,7 @@ const SectionOneLg = () => {
             </div>
             <div className='w-[50%]'>
               <div onClick={()=> handlePostClick(data?.title)}>
-                <img src={data?.image} alt="Arduino" className='w-full h-[20vh] rounded-md cursor-pointer'/>
+                <img src={data?.image} alt={data?.title} className='w-full h-[20vh] rounded-md cursor-pointer'/>
               </div>
             </div>
           </div>

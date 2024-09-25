@@ -51,7 +51,7 @@ const Search = () => {
         <form className="py-4 md:pb-8" onSubmit={handleSearch}>
           <div className='w-full flex items-center justify-center bg-[#f7f7f7] p-4 border-1 border-black rounded-lg'>
             <input 
-              type="type"
+              type="text"
               name="search" 
               value={searchTerm} 
               onChange={(e)=>setSearchTerm(e.target.value)} 
@@ -95,7 +95,7 @@ const Search = () => {
                         </div>
                     </div>
                     <div className="w-[40%] flex items-center" onClick={()=> handlePostClick(item?.title)}>
-                      <img src={item?.image} alt="Arduino" className='w-full h-[100px] md:h-[180px] rounded-md cursor-pointer'/>
+                      <img src={item?.image} alt={item?.title} className='w-full h-[100px] md:h-[180px] rounded-md cursor-pointer'/>
                     </div>
                   </div>
                 </div>

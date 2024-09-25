@@ -43,7 +43,7 @@ const Category = () => {
                         </div>
                     </div>
                     <div className="w-[40%] flex items-center" onClick={()=> handlePostClick(data?.title)}>
-                        <img src={data?.image} alt="Arduino" className='w-full h-[100px] md:h-[180px] rounded-md cursor-pointer'/>
+                        <img src={data?.image} alt={data?.title} className='w-full h-[100px] md:h-[180px] rounded-md cursor-pointer'/>
                     </div>
                     </div>
                 </div>
