@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
-import alimego from '../assets/images/alimego.png'
+import alimego from '../../assets/images/alimego.png'
 import NavbarDropdown from './NavbarDropdown'
-import SearchIcon from './utils/icons/SearchIcon'
-import scrollToTop from '../hooks/scrollToTop'
+import SearchIcon from '../utils/icons/SearchIcon'
+import scrollToTop from '../../hooks/scrollToTop'
 
 const Navbar = () => {
   return (

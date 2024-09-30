@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
-import alimego from '../assets/images/alimego.png'
-import FacebookIcon from '../components/utils/icons/FacebookIcon'
-import InstagramIcon from '../components/utils/icons/InstagramIcon'
-import LinkedinIcon from '../components/utils/icons/LinkedinIcon'
-import TwitterIcon from '../components/utils/icons/TwitterIcon'
-import scrollToTop from '../hooks/scrollToTop'
+import alimego from '../../assets/images/alimego.png'
+import FacebookIcon from '../utils/icons/FacebookIcon'
+import InstagramIcon from '../utils/icons/InstagramIcon'
+import LinkedinIcon from '../utils/icons/LinkedinIcon'
+import TwitterIcon from '../utils/icons/TwitterIcon'
+import scrollToTop from '../../hooks/scrollToTop'
 
 const Footer = () => {
   return (

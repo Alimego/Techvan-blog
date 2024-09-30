@@ -5,6 +5,15 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+body{
   font-family: "Montserrat", monospace;
+}
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }

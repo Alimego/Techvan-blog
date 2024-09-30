@@ -1,4 +1,4 @@
-import NavbarIcon from "./utils/icons/NavbarIcon";
+import NavbarIcon from "../utils/icons/NavbarIcon";
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -8,7 +8,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { useNavigate } from 'react-router-dom';
-import { slugify } from '../hooks/slugify'; // Assuming you have this
+import { slugify } from '../../hooks/slugify'; // Assuming you have this
 
 export default function NavbarDropdown() {
   const [open, setOpen] = React.useState(false);

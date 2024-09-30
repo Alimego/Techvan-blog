@@ -9,6 +9,11 @@ import Jobs from '../pages/Jobs'
 import NoPage from '../pages/NoPage'
 import RegisterPage from '../pages/RegisterPage'
 import LoginPage from '../pages/LoginPage'
+import AdminLayout from '../layouts/AdminLayout'
+import Dashboard from '../pages/admindashboard/Dashboard'
+import CreatePost from '../pages/admindashboard/CreatePost'
+import AllPosts from '../pages/admindashboard/AllPosts'
+import ReadPost from '../pages/admindashboard/ReadPost'
 
 const router = createBrowserRouter([
   {
@@ -49,7 +54,28 @@ const router = createBrowserRouter([
   },
   {
     path: '/alimego-log-1b12',
-    element: < LoginPage/>, // Login page
+    element: <LoginPage/>, // Login page
+  },
+  {
+    path: '/admin-dashboard',
+    element: <AdminLayout />,
+    children: [
+      {
+        path: '',
+        element: <Dashboard />,
+      },
+      {
+        path: 'create',
+        element: <CreatePost />,
+      },
+      {
+        path: 'posts',
+        element: <AllPosts />,
+      },
+      {
+        path: ':slug',
+        element: <ReadPost />,
+      },] 
   },
 ])
 
