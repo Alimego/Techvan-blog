@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -8,11 +9,14 @@ import postData from "../../data/postData";
 import ThreeDotsIcon from "../utils/icons/ThreeDotsIcon";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useMediaQuery } from '@mui/material'
 import { shortTableTitle } from "../../hooks/ReduceTitle";
 import { convertDateFormat } from "../../hooks/dateUtils";
 import { slugify } from '../../hooks/slugify'; 
+import { setPost } from '../../store/reducers/post_reducer';
 
 const tableHead = ["Date", "Writer", "Category", "Title", ""];
+const smTableHead = ["Date", "Title", ""];
 
 const style = {
   position: 'absolute',
@@ -27,11 +31,16 @@ const style = {
 };
 
 export default function TableOfPosts() {
-  const navigate = useNavigate() 
+  const navigate = useNavigate(); 
+  const dispatch = useDispatch();
+  const posts = useSelector((state) => state.posts.posts);
+  const [displayedPosts, setDisplayedPosts] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [optionsMenu, setOptionsMenu] = useState(null);
+  const isMediumScreen = useMediaQuery('(max-width: 1024px)')
+  const tbHead = isMediumScreen ? smTableHead : tableHead
 
   const openDropdown = Boolean(anchorEl);
 
@@ -43,7 +52,7 @@ export default function TableOfPosts() {
     setAnchorEl(e.currentTarget);
     setOptionsMenu((prevOpenMoreOptions) =>
       prevOpenMoreOptions === postId ? null : postId
-    )
+    );
   };
 
   const handleOpenModal = (postId) => {
@@ -57,27 +66,41 @@ export default function TableOfPosts() {
   };
 
   const handleReadClick = (title) => {
-    handleDropdownClose()
-    const slug = slugify(title)
-    navigate(`/admin-dashboard/${slug}`)
-  }
-
-  const handleDeletePost = () => {
-    console.log(`Post ${selectedPostId} deleted`);
-    // Add your delete logic here
+    handleDropdownClose();
+    const slug = slugify(title);
+    navigate(`/admin-dashboard/${slug}`);
   };
+
+  const handleDeleteConfirm = () => {
+    const updatedPosts = posts.filter(post => post.id !== selectedPostId);
+    dispatch(setPost(updatedPosts));
+    setSelectedPostId(null); // Clear the post ID after deleting
+    handleCloseModal();
+  };
+
+  useEffect(() => {
+    if (posts.length > 0) {
+      setDisplayedPosts(posts.slice(0, 5));
+    }
+  }, [posts]);
+
+  useEffect(() => {
+    if (posts.length === 0) {
+      dispatch(setPost(postData));
+    }
+  }, [dispatch, posts.length]);
 
   return (
     <div className="h-full w-full">
-      <table className="w-full min-w-max table-auto text-left">
+      <table className="w-full min-w-max table-auto text-left text-[9px] md:text-[16px]">
         <thead>
           <tr>
-            {tableHead.map((head) => (
+            {tbHead.map((head) => (
               <th
                 key={head}
                 className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
               >
-                <p className="font-normal leading-none opacity-70 text-gray-700">
+                <p className="font-medium md:font-normal leading-none opacity-70 text-gray-700">
                   {head}
                 </p>
               </th>
@@ -85,8 +108,8 @@ export default function TableOfPosts() {
           </tr>
         </thead>
         <tbody>
-          {postData.slice(0, 5).map(({ id, date, writer, category, title }, index) => {
-            const isLast = index === postData.length - 1;
+          {displayedPosts.map(({ id, date, writer, category, title }, index) => {
+            const isLast = index === posts.length - 1;
             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
             return (
@@ -94,23 +117,23 @@ export default function TableOfPosts() {
                 <td className={classes}>
                   <p className="font-normal text-gray-700">{convertDateFormat(date)}</p>
                 </td>
-                <td className={classes}>
+                <td className={`${classes} ${isMediumScreen && 'hidden'}`}>
                   <p className="font-normal text-gray-700">{writer}</p>
                 </td>
-                <td className={classes}>
+                <td className={`${classes} ${isMediumScreen && 'hidden'}`}>
                   <p className="font-normal text-gray-700">{category}</p>
                 </td>
                 <td className={classes}>
                   <p className="font-normal text-gray-700">{shortTableTitle(title)}</p>
                 </td>
                 <td className={classes}>
-                  <p className="font-medium text-gray-700 cursor-pointer">
+                  <p className="font-medium text-sm md:text-[16px] text-gray-700 cursor-pointer">
                     <Button
                       id="basic-button"
                       aria-controls={openDropdown ? 'basic-menu' : undefined}
                       aria-haspopup="true"
                       aria-expanded={openDropdown ? 'true' : undefined}
-                      onClick={(e)=>handleDropdownOptions(e, id)}
+                      onClick={(e) => handleDropdownOptions(e, id)}
                     >
                       <ThreeDotsIcon />
                     </Button>
@@ -124,7 +147,7 @@ export default function TableOfPosts() {
                           'aria-labelledby': 'basic-button',
                         }}
                       >
-                        <MenuItem onClick={()=>handleReadClick(title)}>Read</MenuItem>
+                        <MenuItem onClick={() => handleReadClick(title)}>Read</MenuItem>
                         <MenuItem onClick={handleDropdownClose}>Edit</MenuItem>
                         <MenuItem onClick={() => handleOpenModal(id)}>
                           Delete
@@ -161,10 +184,7 @@ export default function TableOfPosts() {
           <Button onClick={handleCloseModal}>Cancel</Button>
           <Button 
             color="error"
-            onClick={() => {
-              handleDeletePost();
-              handleCloseModal();
-            }}
+            onClick={handleDeleteConfirm}
           >
             Confirm
           </Button>

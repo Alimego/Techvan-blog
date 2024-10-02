@@ -10,17 +10,17 @@ import {
   persistStore,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import pricing_reducer from './reducers/pricing_reducer';
+import post_reducer from './reducers/post_reducer'
 
 const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['pricing'],
+  whitelist: [''],
 };
 
 const reducers = combineReducers({
-  pricing: pricing_reducer,
+  posts: post_reducer
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

@@ -32,7 +32,7 @@ const ReadPost = () => {
   }, [])
 
   return (
-    <div className="bg-[#f7f7f7] p-6 w-full no-scrollbar overflow-scroll">
+    <div className="bg-[#f7f7f7] p-4 md:p-6 w-full no-scrollbar overflow-scroll">
         <div className="flex flex-col gap-3">
             <div className="w-full flex flex-col gap-3">
                 <div>

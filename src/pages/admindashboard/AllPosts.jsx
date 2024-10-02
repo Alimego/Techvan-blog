@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -8,64 +9,85 @@ import postData from '../../data/postData';
 import SearchIcon from '../../components/utils/icons/SearchIcon';
 import { shortenTitle } from '../../hooks/ReduceTitle';
 import { slugify } from '../../hooks/slugify';
+import { setPost } from '../../store/reducers/post_reducer';
+
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #f7f7f7',
+  boxShadow: 24,
+  p: 4,
+};
+
 
 const AllPosts = () => {
-  const navigate = useNavigate()  
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const posts = useSelector((state) => state.posts.posts);
 
-  const handleReadClick = (title) => {
-    const slug = slugify(title)
-    navigate(`/admin-dashboard/${slug}`)
-  }
-
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #f7f7f7',
-    boxShadow: 24,
-    p: 4,
-  };
-
-  const [searchTerm, setSearchTerm] = useState(""); // Track what the user is typing
-  const [displayedSearchTerm, setDisplayedSearchTerm] = useState(""); // Track the term used for the search result display
-  const [searchResults, setSearchResults] = useState(postData);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [displayedSearchTerm, setDisplayedSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState(posts);
   const [noResults, setNoResults] = useState(false);
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const [selectedPostId, setSelectedPostId] = useState(null);
+
+  const handleOpen = (id) => {
+    setSelectedPostId(id);
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
 
+  const handleReadClick = (title) => {
+    const slug = slugify(title);
+    navigate(`/admin-dashboard/${slug}`);
+  };
+
   useEffect(() => {
-    // Filter results based on the current searchTerm
+    if (posts.length === 0) {
+      dispatch(setPost(postData))
+    }
+  }, [dispatch, posts.length]);
+
+  // Handle search logic
+  useEffect(() => {
     const lowerCaseTerm = searchTerm.toLowerCase();
-    const results = postData.filter((item) =>
+    const results = posts.filter((item) =>
       item.category.toLowerCase().includes(lowerCaseTerm) ||
       item.title.toLowerCase().includes(lowerCaseTerm) ||
       item.writer.toLowerCase().includes(lowerCaseTerm) ||
       item.date.toLowerCase().includes(lowerCaseTerm)
     );
 
-    // Update the searchResults state and handle no results case
     if (searchTerm) {
       setDisplayedSearchTerm(searchTerm);
       setSearchResults(results);
       setNoResults(results.length === 0);
     } else {
-      // If searchTerm is empty, reset to all posts
       setDisplayedSearchTerm("");
-      setSearchResults(postData);
+      setSearchResults(posts);
       setNoResults(false);
     }
-  }, [searchTerm]); // Re-run the effect whenever searchTerm changes
+  }, [searchTerm, posts]);
 
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    window.scrollTo(0, 0);
+  }, []);
+
+  const handleDeleteConfirm = () => {
+    const updatedPosts = posts.filter(post => post.id !== selectedPostId);
+    dispatch(setPost(updatedPosts));
+    setSelectedPostId(null); // Clear the post ID after deleting
+    handleClose();
+  };
 
   return (
-    <div className='bg-[#f7f7f7] p-6 w-full no-scrollbar overflow-scroll'>
+    <div className='bg-[#f7f7f7] p-4 md:p-6 w-full no-scrollbar overflow-scroll'>
       <form className="py-4 md:pb-8" onSubmit={(e) => e.preventDefault()}>
         <div className='w-full flex items-center justify-center bg-[#f7f7f7] p-4 border-2 border-gray-300 rounded-lg'>
           <input 
@@ -114,7 +136,7 @@ const AllPosts = () => {
                 <div className='flex items-center justify-between'>
                   <p className='font-bold text-blue-500 cursor-pointer' onClick={()=>handleReadClick(data?.title)}>Read</p>
                   <p className='font-bold text-green-500 cursor-pointer'>Edit</p>
-                  <p className='font-bold text-red-500 cursor-pointer' onClick={handleOpen}>Delete</p>
+                  <p className='font-bold text-red-500 cursor-pointer' onClick={() => handleOpen(data?.id)}>Delete</p>
                 </div>
               </div>
             </div>
@@ -123,7 +145,6 @@ const AllPosts = () => {
       )}
       
       {/* Delete Modal */}
-
       <Modal
         open={open}
         onClose={handleClose}
@@ -140,7 +161,7 @@ const AllPosts = () => {
         <Button onClick={handleClose}>Cancel</Button>
         <Button 
           color="error"
-          onClick={handleClose}
+          onClick={handleDeleteConfirm} // Trigger delete on confirm
         >
           Confirm
         </Button>
@@ -148,6 +169,6 @@ const AllPosts = () => {
     </Modal>
     </div>
   );
-}
+};
 
 export default AllPosts;
