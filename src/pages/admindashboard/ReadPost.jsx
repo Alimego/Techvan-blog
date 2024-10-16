@@ -1,18 +1,24 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import postData from '../../data/postData'
-import { slugify } from '../../hooks/slugify'
+import axios from "axios";
+import { Cookies } from 'react-cookie'
+import { toast } from 'react-toastify';
+import { formatDateToLongString } from '../../hooks/dateFormatters'
 
 const ReadPost = () => {
   const { slug } = useParams()
-  const post = postData.find((post) => slugify(post.title) === slug);
+  const navigate = useNavigate()
+  const cookies = new Cookies()
+  const token = cookies.get('token')
   const [open, setOpen] = useState(false);
+  const [post, setPost] = useState(null);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [selectedPostId, setSelectedPostId] = useState(null)
 
   const style = {
     position: 'absolute',
@@ -26,10 +32,45 @@ const ReadPost = () => {
     p: 4,
   };
 
+  const handleEdit = (id) => {
+    // const slug = slugify(title);
+    navigate(`/admin-dashboard/edit/${id}`);
+  };
 
+  const handleDeleteConfirm = async () => {
+    try {
+      console.log(selectedPostId)
+      await axios.delete(`/posts/${selectedPostId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success('Post deleted successfully', { autoClose: 3000 })
+      navigate('/admin-dashboard/posts')
+      handleClose();
+    } catch (error) {
+      toast.error('Error deleting post.', { autoClose: 3000 })
+      console.error('Error deleting post:', error);
+    }
+  };
+  
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(`/posts/post/${slug}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        setPost(response?.data?.post);
+      } catch (error) {
+        console.error('Error fetching post:', error);
+        toast.error('Failed to fetch post data', { autoClose: 3000 });
+      }
+    };
+
+    fetchPost();
+  }, [slug, token]);
 
   return (
     <div className="bg-[#f7f7f7] p-4 md:p-6 w-full no-scrollbar overflow-scroll">
@@ -42,9 +83,9 @@ const ReadPost = () => {
                     <p className="text-2xl text-black font-bold cursor-pointer w-full lg:w-[60%]">{post?.title}</p>
                 </div>
                 <div className="flex items-center gap-2 text-[#777676] font-[Lato]">
-                    <p>{post?.writer}</p>
+                    <p>{post?.writerName}</p>
                     <p>-</p>
-                    <p>{post?.date}</p>
+                    <p>{formatDateToLongString(post?.date)}</p>
                 </div>
             </div>
             <img 
@@ -54,11 +95,17 @@ const ReadPost = () => {
             />
             <p className='text-[#777676]'>Image Source: {post?.imgSource}</p>
             <div className='py-4'>
-                <p className=' leading-8 text-[17px] font-[Open Sans]'>{post?.content}</p>
+              <div className='leading-8 text-[17px] font-[Open Sans]' dangerouslySetInnerHTML={{ __html: post?.content }} />
             </div>
             <div className="flex justify-between items-center">
-                <button className='bg-green-500 text-white text-xl font-medium px-4 py-2 rounded-md'>Edit</button>
-                <button className='bg-red-500 text-white text-xl font-medium px-4 py-2 rounded-md' onClick={handleOpen}>Delete</button>
+                <button className='bg-green-500 text-white text-xl font-medium px-4 py-2 rounded-md' onClick={() => handleEdit(post?._id)}>Edit</button>
+                <button className='bg-red-500 text-white text-xl font-medium px-4 py-2 rounded-md'
+                  onClick={ () => {
+                    handleOpen()
+                    setSelectedPostId(post?._id)
+                  }}>
+                    Delete
+                </button>
             </div>
         </div>
             
@@ -80,7 +127,7 @@ const ReadPost = () => {
                 <Button onClick={handleClose}>Cancel</Button>
             <Button 
                 color="error"
-                onClick={handleClose}
+                onClick={handleDeleteConfirm}
                 >
                 Confirm
             </Button>

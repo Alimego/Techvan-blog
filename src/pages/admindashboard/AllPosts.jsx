@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import axios from 'axios'; // Import Axios for API requests
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import postData from '../../data/postData';
 import SearchIcon from '../../components/utils/icons/SearchIcon';
 import { shortenTitle } from '../../hooks/ReduceTitle';
 import { slugify } from '../../hooks/slugify';
 import { setPost } from '../../store/reducers/post_reducer';
-
+import { Cookies } from 'react-cookie';
+import { formatDateToLongString } from '../../hooks/dateFormatters';
 
 const style = {
   position: 'absolute',
@@ -24,8 +26,9 @@ const style = {
   p: 4,
 };
 
-
 const AllPosts = () => {
+  const cookies = new Cookies();
+  const token = cookies.get('token');
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
@@ -39,6 +42,7 @@ const AllPosts = () => {
 
   const handleOpen = (id) => {
     setSelectedPostId(id);
+    console.log(selectedPostId)
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
@@ -48,20 +52,57 @@ const AllPosts = () => {
     navigate(`/admin-dashboard/${slug}`);
   };
 
-  useEffect(() => {
-    if (posts.length === 0) {
-      dispatch(setPost(postData))
+  const handleEdit = (id) => {
+    navigate(`/admin-dashboard/edit/${id}`);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      console.log(selectedPostId)
+      console.log(posts)
+      await axios.delete(`/posts/${selectedPostId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success('Post deleted successfully', { autoClose: 3000 })
+      setSearchResults((prevResults) => 
+        prevResults.filter(post => post._id !== selectedPostId)
+      );
+      setSelectedPostId(null);
+      handleClose();
+    } catch (error) {
+      toast.error('Error deleting post.', { autoClose: 3000 })
+      console.error('Error deleting post:', error);
     }
-  }, [dispatch, posts.length]);
+  };
+
+  // Fetch posts from API and update the Redux store
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get('/posts', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the headers
+          },
+        });
+        dispatch(setPost(response.data.posts)); // Dispatch fetched posts to the Redux store
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+
+    fetchPosts();
+  }, [dispatch, token]);
 
   // Handle search logic
   useEffect(() => {
-    const lowerCaseTerm = searchTerm.toLowerCase();
-    const results = posts.filter((item) =>
-      item.category.toLowerCase().includes(lowerCaseTerm) ||
-      item.title.toLowerCase().includes(lowerCaseTerm) ||
-      item.writer.toLowerCase().includes(lowerCaseTerm) ||
-      item.date.toLowerCase().includes(lowerCaseTerm)
+    const lowerCaseTerm = searchTerm?.toLowerCase();
+    const results = posts?.filter((item) =>
+      item?.category?.toLowerCase().includes(lowerCaseTerm) ||
+      item?.title?.toLowerCase().includes(lowerCaseTerm) ||
+      item?.writer?.toLowerCase().includes(lowerCaseTerm) ||
+      item?.date?.toLowerCase().includes(lowerCaseTerm)
     );
 
     if (searchTerm) {
@@ -78,13 +119,6 @@ const AllPosts = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  const handleDeleteConfirm = () => {
-    const updatedPosts = posts.filter(post => post.id !== selectedPostId);
-    dispatch(setPost(updatedPosts));
-    setSelectedPostId(null); // Clear the post ID after deleting
-    handleClose();
-  };
 
   return (
     <div className='bg-[#f7f7f7] p-4 md:p-6 w-full no-scrollbar overflow-scroll'>
@@ -116,8 +150,8 @@ const AllPosts = () => {
         </div>
       ) : (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10'>
-          {searchResults.map((data) => (
-            <div key={data?.id} className="flex bg-white p-4">
+          {searchResults?.map((data) => (
+            <div key={data?._id} className="flex bg-white p-4">
               <div className="w-full flex flex-col gap-3">
                 <div>
                   <p className="text-primary font-semibold font-[Lato]">{data?.category}</p>
@@ -126,17 +160,17 @@ const AllPosts = () => {
                   <p className="text-xl text-black font-bold">{shortenTitle(data?.title)}</p>
                 </div>
                 <div className="flex items-center gap-2 text-[#777676] font-[Lato] text-sm">
-                  <p>{data?.writer}</p>
+                  <p>{data?.writerName}</p>
                   <p>-</p>
-                  <p>{data?.date}</p>
+                  <p>{formatDateToLongString(data?.date)}</p>
                 </div>
                 <div>
                   <img src={data?.image} alt={data?.title} className='w-full h-[200px] rounded-md' />
                 </div>
                 <div className='flex items-center justify-between'>
-                  <p className='font-bold text-blue-500 cursor-pointer' onClick={()=>handleReadClick(data?.title)}>Read</p>
-                  <p className='font-bold text-green-500 cursor-pointer'>Edit</p>
-                  <p className='font-bold text-red-500 cursor-pointer' onClick={() => handleOpen(data?.id)}>Delete</p>
+                  <p className='font-bold text-blue-500 cursor-pointer' onClick={() => handleReadClick(data?.title)}>Read</p>
+                  <p className='font-bold text-green-500 cursor-pointer' onClick={() => handleEdit(data?._id)}>Edit</p>
+                  <p className='font-bold text-red-500 cursor-pointer' onClick={() => handleOpen(data?._id)}>Delete</p>
                 </div>
               </div>
             </div>
@@ -161,7 +195,7 @@ const AllPosts = () => {
         <Button onClick={handleClose}>Cancel</Button>
         <Button 
           color="error"
-          onClick={handleDeleteConfirm} // Trigger delete on confirm
+          onClick={handleDeleteConfirm}
         >
           Confirm
         </Button>

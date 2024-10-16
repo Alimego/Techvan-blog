@@ -1,19 +1,11 @@
 import { Link } from "react-router-dom"
 import TableOfPosts from "./TableOfPosts"
-import postData from "../../data/postData"
-import { useSelector, useDispatch } from "react-redux"
-import { useEffect } from "react"
-import { setPost } from "../../store/reducers/post_reducer"
+import { useSelector } from "react-redux"
 
 const DashboardComponent = () => {
-  const dispatch = useDispatch()
   const posts = useSelector((state) => state.posts.posts);
-  
-  useEffect(() => {
-    dispatch(setPost(postData)); // Loading postData into the Redux store
-  }, [dispatch]);
-  
-  const uniqueWriters = [...new Set(posts.map(post => post.writer))];
+    
+  const uniqueWriters = [...new Set(posts.map(post => post.writerId))];
 
   return (
     <div className="bg-[#f7f7f7] p-4 md:p-6 w-full no-scrollbar overflow-scroll">
@@ -29,7 +21,6 @@ const DashboardComponent = () => {
           <p className="md:text-xl text-gray-700">Posts</p>
         </div>
         <div className='flex flex-col gap-2 items-center justify-center w-[45%] lg:w-1/5 h-40 bg-white shadow-md rounded-md'>
-          {console.log(postData.id)}
           <p className="text-yellow-600 font-bold text-5xl font-[Poppins]">{uniqueWriters.length}</p>
           <p className="md:text-xl text-gray-700">Writers</p>
         </div>

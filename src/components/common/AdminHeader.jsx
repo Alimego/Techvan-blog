@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Cookies } from 'react-cookie';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import alimego from '../../assets/images/alimego.png'
@@ -8,6 +9,8 @@ import adminImg from '../../assets/images/admin.png'
 import DropdownIcon from '../utils/icons/DropdownIcon'
 
 const AdminHeader = ({toggleSideNav}) => {
+  const cookies = new Cookies(); 
+  const username = cookies.get('username');
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -25,7 +28,7 @@ const AdminHeader = ({toggleSideNav}) => {
             <Link to='/'>
                 <div className='flex items-center gap-3'>
                 <img src={alimego} alt='ALIMEGO' className='w-[47px] h-[47px]'/>
-                <p className='hidden md:block text-xl font-bold text-primary font-[Poppins]'>ALIMEGO</p>
+                <p className='hidden lg:block text-xl font-bold text-primary font-[Poppins]'>ALIMEGO</p>
                 </div>
             </Link>
             <div className='cursor-pointer hover:bg-slate-100 p-2' onClick={toggleSideNav}>
@@ -36,7 +39,7 @@ const AdminHeader = ({toggleSideNav}) => {
             <div className='flex items-center gap-3'>
                 <div onClick={(event)=> handleOptions(event)} className='flex items-center gap-4 hover:bg-slate-100 p-2 cursor-pointer'>
                     <img src={adminImg} alt="user" className='rounded-full w-8 h-8'/>
-                    <p className='hidden md:block text-xl font-[Poppins] font-medium'>Chinedu Oscar</p>
+                    <p className='hidden md:block text-xl font-[Poppins] font-medium'>{username}</p>
                     <DropdownIcon />
                 </div>
                 <Menu

@@ -14,6 +14,8 @@ import Dashboard from '../pages/admindashboard/Dashboard'
 import CreatePost from '../pages/admindashboard/CreatePost'
 import AllPosts from '../pages/admindashboard/AllPosts'
 import ReadPost from '../pages/admindashboard/ReadPost'
+import EditPost from '../pages/admindashboard/EditPost'
+import PrivateRoute from './PrivateRoute'
 
 const router = createBrowserRouter([
   {
@@ -58,7 +60,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/admin-dashboard',
-    element: <AdminLayout />,
+    element: (
+      <PrivateRoute>
+        <AdminLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
         path: '',
@@ -67,6 +73,10 @@ const router = createBrowserRouter([
       {
         path: 'create',
         element: <CreatePost />,
+      },
+      {
+        path: 'edit/:id',
+        element: <EditPost />,
       },
       {
         path: 'posts',

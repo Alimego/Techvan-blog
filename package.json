@@ -9,14 +9,18 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "proxy": "http://localhost:5000/api/v1",
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@hookform/resolvers": "^3.9.0",
     "@material-tailwind/react": "^2.1.10",
     "@mui/material": "^6.0.2",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.7",
+    "quill": "^2.0.2",
     "react": "^18.3.1",
+    "react-cookie": "^7.2.0",
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
     "react-helmet-async": "^2.0.5",

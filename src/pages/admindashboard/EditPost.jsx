@@ -1,22 +1,45 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { FaCloudUploadAlt, FaTrash } from 'react-icons/fa';
 import QuillEditor from '../../components/admin/QuillEditor';
 import { toast } from 'react-toastify';
 import { CircularProgress } from '@mui/material';
 import axios from "axios";
 import { Cookies } from 'react-cookie'
-import scrollToTop from '../../hooks/scrollToTop'
 
-const CreatePost = () => {
+const EditPost = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const cookies = new Cookies()
-  const writerName = cookies.get('username')
   const token = cookies.get('token')
-  console.log(writerName)
   const [filePreview, setFilePreview] = useState(null);
   const [content, setContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [resetEditor, setResetEditor] = useState(false);
+  const [post, setPost] = useState(null);
   const formRef = useRef(null);
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(`/posts/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        setPost(response?.data?.post);
+        setContent(response?.data?.post?.content);
+        if (response?.data?.post?.image) {
+          setFilePreview(response?.data?.post?.image);
+        }
+      } catch (error) {
+        console.error('Error fetching post:', error);
+        toast.error('Failed to fetch post data', { autoClose: 3000 });
+      }
+    };
+    
+    fetchPost(); 
+  }, [id, token]);
+  
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -29,13 +52,6 @@ const CreatePost = () => {
 
   const handleDeleteImage = () => {
     setFilePreview(null);
-  };
-
-  const resetForm = () => {
-    formRef.current.reset();
-    setFilePreview(null);
-    setContent('');
-    setResetEditor(prev => !prev);
   };
 
   const handleSubmit = async (e) => {
@@ -54,38 +70,36 @@ const CreatePost = () => {
     formData.append('category', e.target.category.value);
     formData.append('imgSource', e.target.imgSource.value);
     formData.append('content', content);
-    formData.append('writerName', writerName)
   
     const file = e.target.file.files[0];
     if (file) {
       formData.append('image', file);
     }
 
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
-    }
-  
     try {
-      await axios.post('/posts', 
+      await axios.patch(`/posts/${id}`, 
         formData,{
         headers: {
           'Authorization': `Bearer ${token}`,
         },
-    });
-      scrollToTop(document.querySelector('.outlet-container'));
-      toast.success('Post created successfully!', { autoClose: 3000 });
-      resetForm();
+      });
+      toast.success('Post updated successfully!', { autoClose: 3000 });
+      navigate('/admin-dashboard/posts');
     } catch (err) {
       console.log(err);
-      toast.error('Failed to create post. Try again!', { autoClose: 3000 });
+      toast.error('Failed to update post. Try again!', { autoClose: 3000 });
     } finally {
       setIsLoading(false);
     }
   };
 
+  if (!post) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="bg-[#f7f7f7] p-4 md:p-6 w-full no-scrollbar overflow-scroll">
-      <p className="font-semibold text-2xl md:text-3xl py-3 md:py-6">Create Post</p>
+      <p className="font-semibold text-2xl md:text-3xl py-3 md:py-6">Edit Post</p>
       <form ref={formRef} className="w-full md:w-[90%] flex flex-col gap-6" onSubmit={handleSubmit}>
         <div className="flex flex-col items-center justify-center w-fit p-4 rounded-md">
           <div
@@ -127,10 +141,8 @@ const CreatePost = () => {
           name="featured"
           required
           className="w-full bg-[#f7f7f7] md:text-xl outline-none p-4 border-2 border-gray-300 rounded-lg"
+          defaultValue={post?.featured}
         >
-          <option value="" disabled selected className="text-gray-400">
-            Select Featured Status
-          </option>
           <option value="false">False</option>
           <option value="true">True</option>
         </select>
@@ -139,10 +151,8 @@ const CreatePost = () => {
           name="category"
           required
           className="w-full bg-[#f7f7f7] md:text-xl outline-none p-4 border-2 border-gray-300 rounded-lg"
+          defaultValue={post?.category}
         >
-          <option value="" disabled selected>
-            Category*
-          </option>
           <option value="Artificial Intelligence">Artificial Intelligence</option>
           <option value="Blockchain">Blockchain</option>
           <option value="Cybersecurity">Cybersecurity</option>
@@ -159,6 +169,7 @@ const CreatePost = () => {
           placeholder="Title*"
           required
           className="w-full bg-[#f7f7f7] md:text-xl text-black outline-none p-4 border-2 border-gray-300 rounded-lg"
+          defaultValue={post?.title}
         />
 
         <input
@@ -167,11 +178,12 @@ const CreatePost = () => {
           placeholder="Image Source (where you got the image)*"
           required
           className="w-full bg-[#f7f7f7] md:text-xl text-black outline-none p-4 border-2 border-gray-300 rounded-lg"
+          defaultValue={post?.imgSource}
         />
 
         <QuillEditor 
           onContentChange={setContent}
-          reset={resetEditor}
+          initialContent={post?.content}
         />
 
         <div className="flex justify-end">
@@ -183,7 +195,7 @@ const CreatePost = () => {
             {isLoading ? (
               <CircularProgress color="inherit" size={24} />
             ) : (
-              'Create'
+              'Update'
             )}
           </button>
         </div>
@@ -192,4 +204,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default EditPost;

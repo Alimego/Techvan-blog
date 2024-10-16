@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios'
+import { toast } from 'react-toastify'
+import { Cookies } from 'react-cookie'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import postData from "../../data/postData";
 import ThreeDotsIcon from "../utils/icons/ThreeDotsIcon";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useMediaQuery } from '@mui/material'
 import { shortTableTitle } from "../../hooks/ReduceTitle";
-import { convertDateFormat } from "../../hooks/dateUtils";
+import { formatDateToNumericString } from "../../hooks/dateFormatters"
 import { slugify } from '../../hooks/slugify'; 
 import { setPost } from '../../store/reducers/post_reducer';
 
@@ -31,6 +33,8 @@ const style = {
 };
 
 export default function TableOfPosts() {
+  const cookies = new Cookies()
+  const token = cookies.get('token')
   const navigate = useNavigate(); 
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
@@ -56,7 +60,7 @@ export default function TableOfPosts() {
   };
 
   const handleOpenModal = (postId) => {
-    setSelectedPostId(postId); // Store the ID of the post to delete
+    setSelectedPostId(postId); 
     handleDropdownClose();
     setOpenModal(true);
   };
@@ -71,24 +75,51 @@ export default function TableOfPosts() {
     navigate(`/admin-dashboard/${slug}`);
   };
 
-  const handleDeleteConfirm = () => {
-    const updatedPosts = posts.filter(post => post.id !== selectedPostId);
-    dispatch(setPost(updatedPosts));
-    setSelectedPostId(null); // Clear the post ID after deleting
-    handleCloseModal();
+  const handleEditClick = (id) => {
+    handleDropdownClose();
+    navigate(`/admin-dashboard/edit/${id}`);
   };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      await axios.delete(`/posts/${selectedPostId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success('Post deleted successfully', { autoClose: 3000 })
+      const updatedPosts = displayedPosts.filter(post => post._id !== selectedPostId);;
+      dispatch(setPost(updatedPosts));
+      setSelectedPostId(null);
+      handleCloseModal();
+    } catch (error) {
+      toast.error('Error deleting post.', { autoClose: 3000 })
+      console.error('Error deleting post:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get('/posts',{
+          headers: {
+            'Authorization': `Bearer ${token}`,  // Add token to headers
+          },
+        });
+        dispatch(setPost(response.data.posts));
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+  
+    fetchPosts();
+  }, [dispatch, token]);
 
   useEffect(() => {
     if (posts.length > 0) {
       setDisplayedPosts(posts.slice(0, 5));
     }
   }, [posts]);
-
-  useEffect(() => {
-    if (posts.length === 0) {
-      dispatch(setPost(postData));
-    }
-  }, [dispatch, posts.length]);
 
   return (
     <div className="h-full w-full">
@@ -108,17 +139,17 @@ export default function TableOfPosts() {
           </tr>
         </thead>
         <tbody>
-          {displayedPosts.map(({ id, date, writer, category, title }, index) => {
+          {displayedPosts.map(({ _id, date, writerName, category, title }, index) => {
             const isLast = index === posts.length - 1;
             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
             return (
-              <tr key={id}>
+              <tr key={_id}>
                 <td className={classes}>
-                  <p className="font-normal text-gray-700">{convertDateFormat(date)}</p>
+                  <p className="font-normal text-gray-700">{formatDateToNumericString(date)}</p>
                 </td>
                 <td className={`${classes} ${isMediumScreen && 'hidden'}`}>
-                  <p className="font-normal text-gray-700">{writer}</p>
+                  <p className="font-normal text-gray-700">{writerName}</p>
                 </td>
                 <td className={`${classes} ${isMediumScreen && 'hidden'}`}>
                   <p className="font-normal text-gray-700">{category}</p>
@@ -133,11 +164,11 @@ export default function TableOfPosts() {
                       aria-controls={openDropdown ? 'basic-menu' : undefined}
                       aria-haspopup="true"
                       aria-expanded={openDropdown ? 'true' : undefined}
-                      onClick={(e) => handleDropdownOptions(e, id)}
+                      onClick={(e) => handleDropdownOptions(e, _id)}
                     >
                       <ThreeDotsIcon />
                     </Button>
-                    {optionsMenu === id && (
+                    {optionsMenu === _id && (
                       <Menu
                         id="basic-menu"
                         anchorEl={anchorEl}
@@ -148,8 +179,8 @@ export default function TableOfPosts() {
                         }}
                       >
                         <MenuItem onClick={() => handleReadClick(title)}>Read</MenuItem>
-                        <MenuItem onClick={handleDropdownClose}>Edit</MenuItem>
-                        <MenuItem onClick={() => handleOpenModal(id)}>
+                        <MenuItem onClick={() => handleEditClick(_id)}>Edit</MenuItem>
+                        <MenuItem onClick={() => handleOpenModal(_id)}>
                           Delete
                         </MenuItem>
                       </Menu>
