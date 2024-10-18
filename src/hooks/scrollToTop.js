@@ -1,5 +1,9 @@
-const scrollToTop = (element = document.documentElement) => {
+export const toTop = (element = document.documentElement) => {
     element.scrollTo({ top: 0, left: 0 });
 };
 
-export default scrollToTop
+
+export const scrollToPosition = (element = document.documentElement) => {
+    element.scrollTo({ top: 0, left: 0 });
+};
+

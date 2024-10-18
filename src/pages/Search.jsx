@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom'
-import postData from "../data/postData"
+import { useSelector } from 'react-redux';
 import Layout from '../layouts/Layout'
 import SearchIcon from '../components/utils/icons/SearchIcon'
 import { slugify } from '../hooks/slugify'
+import { formatDateToLongString } from "../hooks/dateFormatters"
+import { shortenTitle } from "../hooks/ReduceTitle"
 
 const Search = () => {
   const navigate = useNavigate()
@@ -11,16 +13,17 @@ const Search = () => {
   const [displayedSearchTerm, setDisplayedSearchTerm] = useState("") // Track the term used for the search result display
   const [searchResults, setSearchResults] = useState([])
   const [noResults, setNoResults] = useState(false)
+  const posts = useSelector((state) => state?.posts?.posts);
 
   const handleSearch = (e) => {
     e.preventDefault()
     setDisplayedSearchTerm(searchTerm)
-    const lowerCaseTerm = searchTerm.toLowerCase()
-    const results = postData.filter((item)=>
-      item.category.toLowerCase().includes(lowerCaseTerm) ||
-      item.title.toLowerCase().includes(lowerCaseTerm) ||
-      item.writer.toLowerCase().includes(lowerCaseTerm) ||
-      item.date.toLowerCase().includes(lowerCaseTerm)
+    const lowerCaseTerm = searchTerm?.toLowerCase()
+    const results = posts?.filter((item)=>
+      item?.category?.toLowerCase().includes(lowerCaseTerm) ||
+      item?.title?.toLowerCase().includes(lowerCaseTerm) ||
+      item?.writer?.toLowerCase().includes(lowerCaseTerm) ||
+      item?.date?.toLowerCase().includes(lowerCaseTerm)
   );
     if(results.length > 0) {
       setSearchResults(results)
@@ -79,19 +82,19 @@ const Search = () => {
         ) : (
           <div>
             <div className="md:grid md:grid-cols-2 md:gap-10">
-              {searchResults.map((item)=>(
-                <div key={item?.id}>
+              {searchResults?.map((item)=>(
+                <div key={item?._id}>
                   <div className="flex justify-between gap-3 w-full py-4 md:h-[200px]">
                     <div className="w-[60%] flex flex-col gap-1">
                         <div onClick={()=> handleCategoryClick(item?.category)}>
                           <p className="text-[18px] text-primary font-semibold cursor-pointer">{item?.category}</p>
                         </div>
                         <div onClick={()=> handlePostClick(item?.title)}>
-                          <p className="text-xl text-black font-bold hover:underline cursor-pointer ">{item?.title}</p>
+                          <p className="text-xl text-black font-bold hover:underline cursor-pointer ">{shortenTitle(item?.title)}</p>
                         </div>
                         <div className="flex flex-col gap-1 text-[#777676]">
-                            <p>{item?.writer}</p>
-                            <p>{item?.date}</p>
+                            <p>{item?.writerName}</p>
+                            <p>{formatDateToLongString(item?.date)}</p>
                         </div>
                     </div>
                     <div className="w-[40%] flex items-center" onClick={()=> handlePostClick(item?.title)}>

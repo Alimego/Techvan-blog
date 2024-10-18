@@ -1,61 +1,75 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import postData from '../data/postData'
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 import Layout from '../layouts/Layout'
-import scrollToTop from '../hooks/scrollToTop'
+import { toTop } from '../hooks/scrollToTop'
 import { slugify } from '../hooks/slugify'
 import NoPage from './NoPage'
+import { formatDateToLongString } from "../hooks/dateFormatters"
+import { shortenTitle } from "../hooks/ReduceTitle"
 
 const Post = () => {
   const navigate = useNavigate()
   const { slug } = useParams()
-  const post = postData.find((post) => slugify(post.title) === slug);
+  const [singlePost, setSinglePost] = useState([])
+  const posts = useSelector((state) => state?.posts?.posts);
 
   const handlePostClick = (title) => {
     const slug = slugify(title)
     navigate(`/${slug}`)
-    scrollToTop()
+    toTop()
   }
 
   const handleCategoryClick = (category) => {
     const slug = slugify(category)
     navigate(`/category/${slug}`)
-    scrollToTop()
+    toTop()
   }
 
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get(`/posts/post/${slug}`)
+        setSinglePost(response?.data?.post)
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+
+    toTop()
+    fetchPosts();
+  }, [slug]);
 
   return (
     <Layout>
-      {!post ? (
+      {!singlePost ? (
         <NoPage/>
         ) : (
         <div className="pt-16 md:pt-24 px-6 md:px-20 pb-6">
           <div className="w-full flex flex-col gap-3">
             <div className="w-full flex flex-col gap-3">
-              <div onClick={()=> handleCategoryClick(post?.category)}>
-                <p className="text-xl text-primary font-semibold cursor-pointer font-[Lato]">{post?.category}</p>
+              <div onClick={()=> handleCategoryClick(singlePost?.category)}>
+                <p className="text-xl text-primary font-semibold cursor-pointer font-[Lato]">{singlePost?.category}</p>
               </div>
-              <div onClick={()=> handlePostClick(post?.title)}>
-                <p className="text-2xl text-black font-bold cursor-pointer w-full lg:w-[60%]">{post?.title}</p>
+              <div onClick={()=> handlePostClick(singlePost?.title)}>
+                <p className="text-2xl text-black font-bold cursor-pointer w-full lg:w-[60%]">{singlePost?.title}</p>
               </div>
               <div className="flex items-center gap-2 text-[#777676] font-[Lato]">
-                <p>{post?.writer}</p>
+                <p>{singlePost?.writerName}</p>
                 <p>-</p>
-                <p>{post?.date}</p>
+                <p>{formatDateToLongString(singlePost?.date)}</p>
               </div>
             </div>
             <img 
-              src={post?.image} 
-              alt={post?.title}
+              src={singlePost?.image} 
+              alt={singlePost?.title}
               className='w-full lg:w-[60%] h-[220px] md:h-[500px] rounded-md' 
-              onClick={()=> handlePostClick(post?.title)}
+              onClick={()=> handlePostClick(singlePost?.title)}
             />
-            <p className='text-[#777676]'>Image Source: {post?.imgSource}</p>
+            <p className='text-[#777676]'>Image Source: {singlePost?.imgSource}</p>
             <div className='py-4'>
-              <p className=' leading-8 text-[17px] font-[Open Sans]'>{post?.content}</p>
+              <p className=' leading-8 text-[17px] font-[Open Sans]' dangerouslySetInnerHTML={{ __html: singlePost?.content }} />
             </div>
             <div>
             <div className="pb-3 md:pb-8">
@@ -63,19 +77,19 @@ const Post = () => {
               <div className="bg-[#e4e4e4] w-full h-[1px]"></div>
             </div>
             <div className="grid grid-col-1 lg:grid-cols-2 gap-4 md:gap-10">
-              {postData.map((data)=>(
-                <div key={data?.id}>
+              {posts?.slice(0, 6).map((data)=>(
+                <div key={data?._id}>
                   <div className="flex justify-between gap-3 w-full py-4 md:h-[200px]">
                     <div className="w-[60%] flex flex-col gap-1">
                       <div onClick={()=> handleCategoryClick(data?.category)}>
                         <p className="text-[18px] text-primary font-semibold cursor-pointer font-[Lato]">{data?.category}</p>
                       </div>
                       <div onClick={()=> handlePostClick(data?.title)}>
-                        <p className="text-xl text-black font-bold hover:underline cursor-pointer">{data?.title}</p>
+                        <p className="text-xl text-black font-bold hover:underline cursor-pointer">{shortenTitle(data?.title)}</p>
                       </div>
                       <div className="flex flex-col gap-1 text-[#777676] font-[Lato]">
-                          <p>{data?.writer}</p>
-                          <p>{data?.date}</p>
+                          <p>{data?.writerName}</p>
+                          <p>{formatDateToLongString(data?.date)}</p>
                       </div>
                     </div>
                     <div className="w-[40%] flex items-center" onClick={()=> handlePostClick(data?.title)}>

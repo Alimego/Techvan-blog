@@ -3,7 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import { useMediaQuery } from '@mui/material'
 import AdminHeader from "../components/common/AdminHeader"
 import AdminSideNav from "../components/common/AdminSideNav"
-import scrollToTop from "../hooks/scrollToTop";
+import { scrollToPosition } from "../hooks/scrollToTop";
 
 const AdminLayout = () => {
   const location = useLocation()
@@ -15,7 +15,7 @@ const AdminLayout = () => {
   }
 
   useEffect(() => {
-    scrollToTop(document.querySelector('.outlet-container')); // Target the outlet container
+    scrollToPosition(document.querySelector('.outlet-container')); // Target the outlet container
   }, [location]);
 
   return (

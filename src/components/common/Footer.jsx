@@ -4,14 +4,14 @@ import FacebookIcon from '../utils/icons/FacebookIcon'
 import InstagramIcon from '../utils/icons/InstagramIcon'
 import LinkedinIcon from '../utils/icons/LinkedinIcon'
 import TwitterIcon from '../utils/icons/TwitterIcon'
-import scrollToTop from '../../hooks/scrollToTop'
+import { toTop } from '../../hooks/scrollToTop'
 
 const Footer = () => {
   return (
     <div className="bg-[#212121] text-white p-6 mt-auto">
       <div className='flex flex-col items-center pb-4 gap-2'>
         <Link to='/'>
-          <div className='flex items-center justify-center gap-2 md:gap-4' onClick={scrollToTop}>
+          <div className='flex items-center justify-center gap-2 md:gap-4' onClick={toTop}>
             <img src={alimego} alt='ALIMEGO' className='w-[50px] md:w-[60px] h-[50px] md:h-[60px]'/>
             <p className='block text-2xl md:text-3xl font-bold text-primary'>ALIMEGO</p>
           </div>

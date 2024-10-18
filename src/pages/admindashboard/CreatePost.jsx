@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { CircularProgress } from '@mui/material';
 import axios from "axios";
 import { Cookies } from 'react-cookie'
-import scrollToTop from '../../hooks/scrollToTop'
+import { toTop } from '../../hooks/scrollToTop'
 
 const CreatePost = () => {
   const cookies = new Cookies()
@@ -72,7 +72,7 @@ const CreatePost = () => {
           'Authorization': `Bearer ${token}`,
         },
     });
-      scrollToTop(document.querySelector('.outlet-container'));
+      toTop(document.querySelector('.outlet-container'));
       toast.success('Post created successfully!', { autoClose: 3000 });
       resetForm();
     } catch (err) {
