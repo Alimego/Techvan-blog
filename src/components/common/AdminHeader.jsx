@@ -4,7 +4,7 @@ import { Cookies } from 'react-cookie'
 import { toast } from 'react-toastify'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import alimego from '../../assets/images/alimego.png'
+import techvan from '../../assets/images/techvan.png'
 import NavbarIcon from '../utils/icons/NavbarIcon'
 import adminImg from '../../assets/images/admin.png'
 import DropdownIcon from '../utils/icons/DropdownIcon'
@@ -36,8 +36,8 @@ const AdminHeader = ({toggleSideNav}) => {
         <div className='flex items-center justify-between w-[45%] md:w-[25%] py-2 pl-2 border-r-2'>
             <Link to='/'>
                 <div className='flex items-center gap-3'>
-                <img src={alimego} alt='ALIMEGO' className='w-[47px] h-[47px]'/>
-                <p className='hidden lg:block text-xl font-bold text-primary font-[Poppins]'>ALIMEGO</p>
+                <img src={techvan} alt='TECHVAN' className='w-[47px] h-[47px]'/>
+                <p className='hidden lg:block text-xl font-bold text-primary font-[Poppins]'>TECHVAN</p>
                 </div>
             </Link>
             <div className='cursor-pointer hover:bg-slate-100 p-2' onClick={toggleSideNav}>

@@ -58,11 +58,11 @@ const router = createBrowserRouter([
     element: <Jobs />, // Job page
   },
   {
-    path: '/alimego-reg-1b12',
+    path: '/register',
     element: <RegisterPage />, //  Register page
   },
   {
-    path: '/alimego-log-1b12',
+    path: '/login',
     element: <LoginPage/>, // Login page
   },
   {

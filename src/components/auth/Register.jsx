@@ -54,7 +54,7 @@ const Register = () => {
       setIsLoading(false);
       toast.success('Registration successful', { autoClose: 3000 });
       reset();
-      navigate('/alimego-log-1b12');
+      navigate('/login');
     } catch (err) {
       console.log(err);
       setIsLoading(false);
@@ -130,7 +130,7 @@ const Register = () => {
         </button>
         <p>Already a member? 
           <span className="text-[#1B4285]">
-            <Link to='/alimego-log-1b12'> Sign In</Link>
+            <Link to='/login'> Sign In</Link>
           </span>
         </p>
       </form>

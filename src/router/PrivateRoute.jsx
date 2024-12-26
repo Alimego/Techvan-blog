@@ -6,7 +6,7 @@ const cookies = new Cookies()
 const PrivateRoute = ({ children }) => {
   const token = cookies.get('token')
   if (!token) {
-    return <Navigate to="/alimego-log-1b12" />
+    return <Navigate to="/login" />
   }
   return children
 }

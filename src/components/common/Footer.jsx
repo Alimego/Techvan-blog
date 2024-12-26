@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import alimego from '../../assets/images/alimego.png'
+import techvan from '../../assets/images/techvan.png'
 import FacebookIcon from '../utils/icons/FacebookIcon'
 import InstagramIcon from '../utils/icons/InstagramIcon'
 import LinkedinIcon from '../utils/icons/LinkedinIcon'
@@ -12,11 +12,11 @@ const Footer = () => {
       <div className='flex flex-col items-center pb-4 gap-2'>
         <Link to='/'>
           <div className='flex items-center justify-center gap-2 md:gap-4' onClick={toTop}>
-            <img src={alimego} alt='ALIMEGO' className='w-[50px] md:w-[60px] h-[50px] md:h-[60px]'/>
-            <p className='block text-2xl md:text-3xl font-bold text-primary'>ALIMEGO</p>
+            <img src={techvan} alt='TECHVAN' className='w-[50px] md:w-[60px] h-[50px] md:h-[60px]'/>
+            <p className='block text-2xl md:text-3xl font-bold text-primary'>TECHVAN</p>
           </div>
         </Link>
-        <div className='text-center font-medium md:w-[600px] font-[Lato]'>Alimego Empowers you with Knowledge. Get the latest insights and updates on the ever-evolving world of technology.</div>
+        <div className='text-center font-medium md:w-[600px] font-[Lato]'>Techvan Empowers you with Knowledge. Get the latest insights and updates on the ever-evolving world of technology.</div>
       </div>
       <ul className='flex gap-10 md:gap-20 justify-center items-center py-4 md:py-6 text-[18px] font-[Lato]'>
         <Link to={'/about'}>About</Link>

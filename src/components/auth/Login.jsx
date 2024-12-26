@@ -117,7 +117,7 @@ const Login = () => {
         </button>
         <p>Don&apos;t have an account yet? 
           <span className="text-[#1B4285]">
-            <Link to='/alimego-reg-1b12'> Sign Up</Link>
+            <Link to='/register'> Sign Up</Link>
           </span>
         </p>
       </form>
