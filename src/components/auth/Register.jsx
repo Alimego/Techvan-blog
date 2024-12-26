@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { CircularProgress, Alert } from '@mui/material';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import { useState, useEffect } from 'react';
@@ -128,6 +128,11 @@ const Register = () => {
         >
           {isLoading ? <CircularProgress color="inherit" size={24} /> : 'Register'}
         </button>
+        <p>Already a member? 
+          <span className="text-[#1B4285]">
+            <Link to='/alimego-log-1b12'> Sign In</Link>
+          </span>
+        </p>
       </form>
     </div>
   );

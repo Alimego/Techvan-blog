@@ -10,11 +10,18 @@ import NoPage from '../pages/NoPage'
 import RegisterPage from '../pages/RegisterPage'
 import LoginPage from '../pages/LoginPage'
 import AdminLayout from '../layouts/AdminLayout'
+import WriterLayout from '../layouts/WriterLayout'
+import DashboardRedirect from '../pages/DashboardRedirect'
 import Dashboard from '../pages/admindashboard/Dashboard'
 import CreatePost from '../pages/admindashboard/CreatePost'
 import AllPosts from '../pages/admindashboard/AllPosts'
 import ReadPost from '../pages/admindashboard/ReadPost'
 import EditPost from '../pages/admindashboard/EditPost'
+import WriterDashboard from '../pages/writerdashboard/WriterDashboard'
+import WriterCreatePost from '../pages/writerdashboard/WriterCreatePost'
+import WriterAllPosts from '../pages/writerdashboard/WriterAllPosts'
+import WriterReadPost from '../pages/writerdashboard/WriterReadPost'
+import WriterEditPost from '../pages/writerdashboard/WriterEditPost'
 import PrivateRoute from './PrivateRoute'
 
 const router = createBrowserRouter([
@@ -59,6 +66,10 @@ const router = createBrowserRouter([
     element: <LoginPage/>, // Login page
   },
   {
+    path: '/dashboard-redirect',
+    element: <DashboardRedirect/>, // Dashboard redirect page
+  },
+  {
     path: '/admin-dashboard',
     element: (
       <PrivateRoute>
@@ -85,6 +96,35 @@ const router = createBrowserRouter([
       {
         path: ':slug',
         element: <ReadPost />,
+      },] 
+  },
+  {
+    path: '/writer-dashboard',
+    element: (
+      <PrivateRoute>
+        <WriterLayout />
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        path: '',
+        element: <WriterDashboard />,
+      },
+      {
+        path: 'create',
+        element: <WriterCreatePost />,
+      },
+      {
+        path: 'edit/:id',
+        element: <WriterEditPost />,
+      },
+      {
+        path: 'posts',
+        element: <WriterAllPosts />,
+      },
+      {
+        path: ':slug',
+        element: <WriterReadPost />,
       },] 
   },
 ])

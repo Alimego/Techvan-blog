@@ -7,7 +7,7 @@ import { CircularProgress } from '@mui/material';
 import axios from "axios";
 import { Cookies } from 'react-cookie'
 
-const EditPost = () => {
+const WriterEditPost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const cookies = new Cookies()
@@ -26,6 +26,7 @@ const EditPost = () => {
             'Authorization': `Bearer ${token}`,
           },
         });
+        console.log("hi", response?.data?.post)
         setPost(response?.data?.post);
         setContent(response?.data?.post?.content);
         if (response?.data?.post?.image) {
@@ -77,6 +78,7 @@ const EditPost = () => {
     }
 
     try {
+      console.log(id)
       await axios.patch(`/posts/${id}`, 
         formData,{
         headers: {
@@ -84,7 +86,7 @@ const EditPost = () => {
         },
       });
       toast.success('Post updated successfully!', { autoClose: 3000 });
-      navigate('/admin-dashboard/posts');
+      navigate('/writer-dashboard/posts');
     } catch (err) {
       console.log(err);
       toast.error('Failed to update post. Try again!', { autoClose: 3000 });
@@ -204,4 +206,4 @@ const EditPost = () => {
   );
 };
 
-export default EditPost;
+export default WriterEditPost;

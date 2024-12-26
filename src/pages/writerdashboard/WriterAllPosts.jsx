@@ -10,7 +10,7 @@ import Modal from '@mui/material/Modal';
 import SearchIcon from '../../components/utils/icons/SearchIcon';
 import { shortenTitle } from '../../hooks/ReduceTitle';
 import { slugify } from '../../hooks/slugify';
-import { setPost } from '../../store/reducers/post_reducer';
+import { setWriterPost } from '../../store/reducers/post_reducer';
 import { Cookies } from 'react-cookie';
 import { formatDateToLongString } from '../../hooks/dateFormatters';
 
@@ -26,47 +26,45 @@ const style = {
   p: 4,
 };
 
-const AllPosts = () => {
+const WriterAllPosts = () => {
   const cookies = new Cookies();
   const token = cookies.get('token');
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts.posts);
+  const writerPosts = useSelector((state) => state.posts.writerPosts);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [displayedSearchTerm, setDisplayedSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState(posts);
+  const [searchResults, setSearchResults] = useState(writerPosts);
   const [noResults, setNoResults] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
 
   const handleOpen = (id) => {
     setSelectedPostId(id);
-    console.log(selectedPostId)
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
 
   const handleReadClick = (title) => {
     const slug = slugify(title);
-    navigate(`/admin-dashboard/${slug}`);
+    navigate(`/writer-dashboard/${slug}`);
   };
 
   const handleEdit = (id) => {
-    navigate(`/admin-dashboard/edit/${id}`);
+    navigate(`/writer-dashboard/edit/${id}`);
   };
 
   const handleDeleteConfirm = async () => {
     try {
       console.log(selectedPostId)
-      console.log(posts)
       await axios.delete(`/posts/${selectedPostId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       toast.success('Post deleted successfully', { autoClose: 3000 })
-      dispatch(setPost(posts.filter(post => post._id !== selectedPostId)));
+      dispatch(setWriterPost(writerPosts.filter(post => post._id !== selectedPostId)));
       setSearchResults((prevResults) => 
         prevResults.filter(post => post._id !== selectedPostId)
       );
@@ -82,12 +80,12 @@ const AllPosts = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('/posts', {
+        const response = await axios.get('/posts/writer', {
           headers: {
             Authorization: `Bearer ${token}`, // Include the token in the headers
           },
         });
-        dispatch(setPost(response.data.posts)); // Dispatch fetched posts to the Redux store
+        dispatch(setWriterPost(response.data.posts)); // Dispatch fetched posts to the Redux store
       } catch (error) {
         console.error('Error fetching posts:', error);
       }
@@ -99,7 +97,7 @@ const AllPosts = () => {
   // Handle search logic
   useEffect(() => {
     const lowerCaseTerm = searchTerm?.toLowerCase();
-    const results = posts?.filter((item) =>
+    const results = writerPosts?.filter((item) =>
       item?.category?.toLowerCase().includes(lowerCaseTerm) ||
       item?.title?.toLowerCase().includes(lowerCaseTerm) ||
       item?.writer?.toLowerCase().includes(lowerCaseTerm) ||
@@ -112,10 +110,10 @@ const AllPosts = () => {
       setNoResults(results.length === 0);
     } else {
       setDisplayedSearchTerm("");
-      setSearchResults(posts);
+      setSearchResults(writerPosts);
       setNoResults(false);
     }
-  }, [searchTerm, posts]);
+  }, [searchTerm, writerPosts]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -206,4 +204,4 @@ const AllPosts = () => {
   );
 };
 
-export default AllPosts;
+export default WriterAllPosts;

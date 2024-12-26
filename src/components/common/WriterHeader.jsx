@@ -9,7 +9,7 @@ import NavbarIcon from '../utils/icons/NavbarIcon'
 import adminImg from '../../assets/images/admin.png'
 import DropdownIcon from '../utils/icons/DropdownIcon'
 
-const AdminHeader = ({toggleSideNav}) => {
+const WriterHeader = ({toggleSideNav}) => {
   const cookies = new Cookies(); 
   const navigate = useNavigate();
   const username = cookies.get('username');
@@ -27,9 +27,10 @@ const AdminHeader = ({toggleSideNav}) => {
   const logout = () => {
     cookies.remove('token');
     cookies.remove('username');
+    cookies.remove('role')
     toast.success('Logout successful', { autoClose: 3000 });
     navigate('/');
-  }
+  };
 
   return (
     <div className="flex h-[10vh] items-center justify-between bg-white shadow-md">
@@ -69,5 +70,5 @@ const AdminHeader = ({toggleSideNav}) => {
   )
 }
 
-export default AdminHeader
+export default WriterHeader
 

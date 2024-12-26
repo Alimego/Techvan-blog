@@ -9,7 +9,7 @@ import { Cookies } from 'react-cookie'
 import { toast } from 'react-toastify';
 import { formatDateToLongString } from '../../hooks/dateFormatters'
 
-const ReadPost = () => {
+const WriterReadPost = () => {
   const { slug } = useParams()
   const navigate = useNavigate()
   const cookies = new Cookies()
@@ -34,7 +34,7 @@ const ReadPost = () => {
 
   const handleEdit = (id) => {
     // const slug = slugify(title);
-    navigate(`/admin-dashboard/edit/${id}`);
+    navigate(`/writer-dashboard/edit/${id}`);
   };
 
   const handleDeleteConfirm = async () => {
@@ -46,7 +46,7 @@ const ReadPost = () => {
         },
       });
       toast.success('Post deleted successfully', { autoClose: 3000 })
-      navigate('/admin-dashboard/posts')
+      navigate('/writer-dashboard/posts')
       handleClose();
     } catch (error) {
       toast.error('Error deleting post.', { autoClose: 3000 })
@@ -137,4 +137,4 @@ const ReadPost = () => {
   )
 }
 
-export default ReadPost
+export default WriterReadPost

@@ -84,7 +84,7 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="bg-[#f7f7f7] p-4 md:p-6 w-full no-scrollbar overflow-scroll">
+    <div className="bg-[#f7f7f7] p-4 md:p-6 w-full no-scrollbar overflow-scroll h-full">
       <p className="font-semibold text-2xl md:text-3xl py-3 md:py-6">Create Post</p>
       <form ref={formRef} className="w-full md:w-[90%] flex flex-col gap-6" onSubmit={handleSubmit}>
         <div className="flex flex-col items-center justify-center w-fit p-4 rounded-md">
@@ -177,7 +177,7 @@ const CreatePost = () => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="bg-primary p-4 text-white text-2xl font-semibold rounded-lg w-[20%]"
+            className="bg-primary p-4 text-white text-xl md:text-2xl font-semibold rounded-lg w-[30%] md:w-[20%]"
             disabled={isLoading}
           >
             {isLoading ? (

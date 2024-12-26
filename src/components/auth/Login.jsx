@@ -3,7 +3,7 @@ import { Alert, CircularProgress } from '@mui/material'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import * as yup from 'yup'
 import { FaEye, FaEyeSlash } from 'react-icons/fa' 
@@ -60,10 +60,16 @@ const Login = () => {
         secure: true, 
         sameSite: 'strict' 
       });
+      cookies.set('role', response?.data?.user?.role, {
+        path: '/', 
+        expires, 
+        secure: true, 
+        sameSite: 'strict' 
+      });
       // Handle success response (e.g., save tokens or user info)
       toast.success('Login successful', { autoClose: 3000 })
       reset()
-      navigate('/admin-dashboard')
+      navigate('/dashboard-redirect')
     } catch (err) {
       console.log(err)
       setIsLoading(false)
@@ -109,6 +115,11 @@ const Login = () => {
         >
           {isLoading ? <CircularProgress color="inherit" size={24} /> : 'Login'}
         </button>
+        <p>Don&apos;t have an account yet? 
+          <span className="text-[#1B4285]">
+            <Link to='/alimego-reg-1b12'> Sign Up</Link>
+          </span>
+        </p>
       </form>
     </div>
   )

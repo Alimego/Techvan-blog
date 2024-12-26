@@ -8,7 +8,7 @@ const DashboardComponent = () => {
   const uniqueWriters = [...new Set(posts.map(post => post.writerId))];
 
   return (
-    <div className="bg-[#f7f7f7] p-4 md:p-6 w-full no-scrollbar overflow-scroll">
+    <div className="bg-[#f7f7f7] p-4 md:p-6 w-full no-scrollbar overflow-scroll h-full">
       <div className="flex items-center justify-between">
         <p className="text-[22px] md:text-2xl font-semibold">Overview</p>
         <Link to='/admin-dashboard/create'>
