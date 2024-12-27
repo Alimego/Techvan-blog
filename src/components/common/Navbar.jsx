@@ -11,20 +11,20 @@ const Navbar = () => {
   const token = cookies.get('token')
 
   return (
-    <div className='bg-white fixed shadow-sm py-1 md:py-2 px-4 md:px-16 w-full flex items-center justify-between'>
+    <div className='bg-white fixed shadow-sm py-2 md:py-2 px-4 md:px-16 w-full flex items-center justify-between'>
       <Link to='/'>
-        <div className='flex items-center gap-2 md:gap-4' onClick={toTop}>
-          <img src={techvan} alt='TECHVAN' className='w-[50px] md:w-[60px] h-[50px] md:h-[60px]'/>
-          <p className='block text-2xl md:text-3xl font-bold text-primary font-[Poppins]'>TECHVAN</p>
+        <div className='flex items-center gap-2 justify-center' onClick={toTop}>
+          <img src={techvan} alt='TECHVAN' className='w-[20px] md:w-[40px] h-[20px] md:h-[40px]'/>
+          <p className='block text-[18px] md:text-2xl font-bold text-primary font-[Poppins]'>TECHVAN</p>
         </div>
       </Link>
-      <div className='flex items-center md:gap-4'>
+      <div className='flex items-center gap-4 md:gap-10'>
         <div className='cursor-pointer'>
           <Link to='/search'>
             <SearchIcon />
           </Link>
         </div>
-        <div className='cursor-pointer ml-6 mr-2'>
+        <div className='cursor-pointer'>
           <Link to={token ? '/dashboard-redirect' :'/login'}>
             <UserIcon />
           </Link>

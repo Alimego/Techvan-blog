@@ -11,9 +11,9 @@ const Footer = () => {
     <div className="bg-[#212121] text-white p-6 mt-auto">
       <div className='flex flex-col items-center pb-4 gap-2'>
         <Link to='/'>
-          <div className='flex items-center justify-center gap-2 md:gap-4' onClick={toTop}>
-            <img src={techvan} alt='TECHVAN' className='w-[50px] md:w-[60px] h-[50px] md:h-[60px]'/>
-            <p className='block text-2xl md:text-3xl font-bold text-primary'>TECHVAN</p>
+          <div className='flex items-center justify-center gap-2' onClick={toTop}>
+            <img src={techvan} alt='TECHVAN' className='w-[20px] md:w-[40px] h-[20px] md:h-[40px]'/>
+            <p className='block text-xl md:text-2xl font-bold text-primary'>TECHVAN</p>
           </div>
         </Link>
         <div className='text-center font-medium md:w-[600px] font-[Lato]'>Techvan Empowers you with Knowledge. Get the latest insights and updates on the ever-evolving world of technology.</div>

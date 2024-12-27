@@ -1,8 +1,8 @@
 function NavbarIcon() {
   return (
     <svg
-      width="30"
-      height="30"
+      width="24"
+      height="24"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w2.org/2000/svg"

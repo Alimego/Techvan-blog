@@ -5,13 +5,13 @@ import QuillEditor from '../../components/admin/QuillEditor';
 import { toast } from 'react-toastify';
 import { CircularProgress } from '@mui/material';
 import axios from "axios";
-import { Cookies } from 'react-cookie'
+import { Cookies } from 'react-cookie';
 
 const EditPost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const cookies = new Cookies()
-  const token = cookies.get('token')
+  const cookies = new Cookies();
+  const token = cookies.get('token');
   const [filePreview, setFilePreview] = useState(null);
   const [content, setContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -23,23 +23,23 @@ const EditPost = () => {
       try {
         const response = await axios.get(`/posts/${id}`, {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
-        setPost(response?.data?.post);
-        setContent(response?.data?.post?.content);
-        if (response?.data?.post?.image) {
-          setFilePreview(response?.data?.post?.image);
+        const postData = response?.data?.post;
+        setPost(postData);
+        setContent(postData?.content);
+        if (postData?.image) {
+          setFilePreview(postData?.image);
         }
       } catch (error) {
         console.error('Error fetching post:', error);
         toast.error('Failed to fetch post data', { autoClose: 3000 });
       }
     };
-    
-    fetchPost(); 
+
+    fetchPost();
   }, [id, token]);
-  
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -63,30 +63,29 @@ const EditPost = () => {
       setIsLoading(false);
       return;
     }
-  
+
     const formData = new FormData();
     formData.append('featured', e.target.featured.value);
     formData.append('title', e.target.title.value);
     formData.append('category', e.target.category.value);
     formData.append('imgSource', e.target.imgSource.value);
     formData.append('content', content);
-  
+
     const file = e.target.file.files[0];
     if (file) {
       formData.append('image', file);
     }
 
     try {
-      await axios.patch(`/posts/${id}`, 
-        formData,{
+      await axios.patch(`/posts/${id}`, formData, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       toast.success('Post updated successfully!', { autoClose: 3000 });
       navigate('/admin-dashboard/posts');
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error('Failed to update post. Try again!', { autoClose: 3000 });
     } finally {
       setIsLoading(false);
@@ -94,7 +93,18 @@ const EditPost = () => {
   };
 
   if (!post) {
-    return <div>Loading...</div>;
+    return (
+      <div className="bg-[#f7f7f7] p-4 md:p-6 w-full no-scrollbar overflow-scroll h-full">
+        <div className="animate-pulse">
+          <div className="h-6 bg-gray-300 rounded-md w-1/4 mb-4"></div>
+          <div className="h-64 bg-gray-300 rounded-md w-72 mb-6"></div>
+          <div className="h-10 bg-gray-300 rounded-md w-full mb-4"></div>
+          <div className="h-10 bg-gray-300 rounded-md w-full mb-4"></div>
+          <div className="h-10 bg-gray-300 rounded-md w-full mb-4"></div>
+          <div className="h-64 bg-gray-300 rounded-md w-full mb-6"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -181,7 +191,7 @@ const EditPost = () => {
           defaultValue={post?.imgSource}
         />
 
-        <QuillEditor 
+        <QuillEditor
           onContentChange={setContent}
           initialContent={post?.content}
         />
@@ -192,11 +202,7 @@ const EditPost = () => {
             className="bg-primary p-4 text-white text-xl md:text-2xl font-semibold rounded-lg w-[30%] md:w-[20%]"
             disabled={isLoading}
           >
-            {isLoading ? (
-              <CircularProgress color="inherit" size={24} />
-            ) : (
-              'Update'
-            )}
+            {isLoading ? <CircularProgress color="inherit" size={24} /> : 'Update'}
           </button>
         </div>
       </form>

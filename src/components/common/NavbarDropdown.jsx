@@ -44,7 +44,7 @@ export default function NavbarDropdown() {
 
   return (
     <div>
-      <Button onClick={toggleDrawer(true)}><NavbarIcon /></Button>
+      <div className="cursor-pointer" onClick={toggleDrawer(true)}><NavbarIcon /></div>
       <Drawer anchor='right' open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>

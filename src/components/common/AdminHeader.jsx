@@ -35,9 +35,9 @@ const AdminHeader = ({toggleSideNav}) => {
     <div className="flex h-[10vh] items-center justify-between bg-white shadow-md">
         <div className='flex items-center justify-between w-[45%] md:w-[25%] py-2 pl-2 border-r-2'>
             <Link to='/'>
-                <div className='flex items-center gap-3'>
-                <img src={techvan} alt='TECHVAN' className='w-[47px] h-[47px]'/>
-                <p className='hidden lg:block text-xl font-bold text-primary font-[Poppins]'>TECHVAN</p>
+                <div className='flex items-center gap-1'>
+                <img src={techvan} alt='TECHVAN' className='w-[30px] h-[30px] md:w-[40px] md:h-[40px]'/>
+                <p className='hidden lg:block text-[18px] font-bold text-primary font-[Poppins]'>TECHVAN</p>
                 </div>
             </Link>
             <div className='cursor-pointer hover:bg-slate-100 p-2' onClick={toggleSideNav}>

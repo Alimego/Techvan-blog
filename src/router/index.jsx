@@ -27,7 +27,7 @@ import PrivateRoute from './PrivateRoute'
 const router = createBrowserRouter([
   {
     path: '*',
-    element: <NoPage />, // 404 page to be completed
+    element: <NoPage />, // 404 page
   },
   {
     path: '/',
